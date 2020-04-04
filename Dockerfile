@@ -1,4 +1,4 @@
-from ubuntu:eoan
+FROM ubuntu:eoan
 
 
 ARG ARCH=amd64
