@@ -1,6 +1,5 @@
 FROM ubuntu:eoan
 
-
 ARG ARCH=amd64
 
 RUN apt-get update && \
@@ -9,15 +8,7 @@ RUN apt-get update && \
         unzip \
         && apt-get clean
 
-EXPOSE 19132/udp
-
-VOLUME ["/data"]
-
-WORKDIR /data
-
-ENTRYPOINT ["/usr/local/bin/entrypoint-demoter", "--match", "/data", "--debug", "--stdin-on-term", "stop", "/opt/bedrock-entry.sh"]
-
-FROM debian
+WORKDIR /opt/minecraft
 
 # ARCH is only set to avoid repetition in Dockerfile since the binary download only supports amd64
 ARG ARCH=amd64
@@ -29,16 +20,25 @@ RUN apt-get update && \
     dumb-init \
     && apt-get clean
 
-EXPOSE 19132/udp
+WORKDIR /opt/minecraft
 
-VOLUME ["/data/worlds"]
-
-ADD run.sh /data/run.sh
-
-WORKDIR /data
+ADD run.sh run.sh
 
 RUN curl -o /tmp/minecraft.zip -fsSL https://minecraft.azureedge.net/bin-linux/bedrock-server-1.14.32.1.zip && \
-    cd /data && unzip -o -q /tmp/minecraft.zip && rm /tmp/minecraft.zip
+    unzip -o -q /tmp/minecraft.zip && rm /tmp/minecraft.zip
+
+RUN mkdir /opt/minecraft/config && \
+    mv /opt/minecraft/server.properties /opt/minecraft/config && \
+    mv /opt/minecraft/permissions.json /opt/minecraft/config && \
+    mv /opt/minecraft/whitelist.json /opt/minecraft/config && \
+    ln -s /opt/minecraft/config/server.properties /opt/minecraft/server.properties && \
+    ln -s /opt/minecraft/config/permissions.json /opt/minecraft/permissions.json && \
+    ln -s /opt/minecraft/config/whitelist.json /opt/minecraft/whitelist.json
+
+EXPOSE 19132/udp
+
+VOLUME ["/opt/minecraft/worlds"]
+VOLUME ["/data/minecraft/config"]
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-CMD ["/data/run.sh"]
+CMD ["/opt/minecraft/run.sh"]
