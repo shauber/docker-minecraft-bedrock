@@ -1,0 +1,16 @@
+version: '3'
+services:
+  minecraft:
+    image: shauber/docker-minecraft-bedrock:latest
+    container_name: minecraft
+    restart: always
+    ports:
+      - 19132:19132/udp
+    volumes:
+      - minecraft-config:/opt/minecraft/config
+      - minecraft-worlds:/opt/minecraft/worlds
+    environment:
+      - TZ=America/America/New_York
+volumes:
+  minecraft-config:
+  minecraft-worlds:
