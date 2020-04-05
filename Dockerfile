@@ -10,17 +10,7 @@ RUN apt-get update && \
 
 WORKDIR /opt/minecraft
 
-# ARCH is only set to avoid repetition in Dockerfile since the binary download only supports amd64
 ARG ARCH=amd64
-
-RUN apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    curl \
-    unzip \
-    dumb-init \
-    && apt-get clean
-
-WORKDIR /opt/minecraft
 
 ADD run.sh run.sh
 
