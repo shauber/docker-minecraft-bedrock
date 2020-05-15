@@ -3,9 +3,10 @@ FROM ubuntu:eoan
 ARG ARCH=amd64
 
 RUN apt-get update && \
-    apt-get install -y \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
         curl \
         unzip \
+        dumb-init \
         && apt-get clean
 
 WORKDIR /opt/minecraft
@@ -14,7 +15,7 @@ ARG ARCH=amd64
 
 ADD run.sh run.sh
 
-RUN curl -o /tmp/minecraft.zip -fsSL https://minecraft.azureedge.net/bin-linux/bedrock-server-1.14.32.1.zip && \
+RUN curl -o /tmp/minecraft.zip -fsSL https://minecraft.azureedge.net/bin-linux/bedrock-server-1.14.60.5.zip && \
     unzip -o -q /tmp/minecraft.zip && rm /tmp/minecraft.zip
 
 RUN mkdir /opt/minecraft/config && \

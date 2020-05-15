@@ -1,7 +1,7 @@
 version: '3'
 services:
   minecraft:
-    image: shauber/docker-minecraft-bedrock:latest
+    image: shauber/docker-minecraft-bedrock:1.14.60.5
     container_name: minecraft
     restart: always
     ports:
